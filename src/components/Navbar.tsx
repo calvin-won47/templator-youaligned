@@ -1,13 +1,16 @@
 
 import { Link } from 'react-router-dom'
 import { Menu, Search, User } from 'lucide-react'
+import { useConfig } from '../contexts/ConfigContext'
 
 export default function Navbar() {
+  const config = useConfig()
+  const brand = config?.siteIdentity?.name || 'YouAligned'
   return (
     <header className="bg-white shadow-sm">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         <Link to="/" className="text-2xl font-serif font-bold text-primary">
-          YouAligned
+          {brand}
         </Link>
         
         <nav className="hidden md:flex space-x-8">

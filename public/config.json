@@ -15,5 +15,66 @@
   "apiEndpoints": {
     "strapi_url": "https://2amcreations.com",
     "strapi_site_slug": "xmyxyswkj"
+  },
+  "hero": {
+    "title": "Align Your Life",
+    "subtitle": "Yoga, wellness and conscious living inspiration, tutorials and resources",
+    "ctaArticles": "Explore Articles",
+    "ctaVideos": "Watch Videos"
+  },
+  "footer": {
+    "description": "Yoga, wellness and conscious living inspiration.",
+    "subscribeText": "Get the latest updates and inspiration.",
+    "subscribeButton": "Join"
+  },
+  "homepage": {
+    "sections": {
+      "categories": {
+        "title": "Browse Categories",
+        "items": [
+          { "name": "Yoga", "slug": "yoga", "count": 42, "image": "https://picsum.photos/400/300?random=4" },
+          { "name": "Meditation", "slug": "meditation", "count": 28, "image": "https://picsum.photos/400/300?random=5" },
+          { "name": "Wellness", "slug": "wellness", "count": 35, "image": "https://picsum.photos/400/300?random=6" },
+          { "name": "Nutrition", "slug": "nutrition", "count": 19, "image": "https://picsum.photos/400/300?random=7" },
+          { "name": "Mindfulness", "slug": "mindfulness", "count": 23, "image": "httpsum.photos/400/300?random=8" },
+          { "name": "Lifestyle", "slug": "lifestyle", "count": 31, "image": "https://picsum.photos/400/300?random=9" }
+        ]
+      },
+      "featuredPosts": {
+        "title": "Featured Articles",
+        "items": [
+          {
+            "id": 1,
+            "title": "Morning Yoga Routine for Beginners",
+            "excerpt": "Start your day with this gentle 20-minute yoga sequence perfect for beginners.",
+            "category": "Yoga",
+            "date": "May 15, 2023",
+            "image": "https://picsum.photos/800/500?random=1",
+            "alt": "Woman doing yoga on the beach at sunrise",
+            "linkPath": "/articles/1"
+          },
+          {
+            "id": 2,
+            "title": "5 Essential Oils for Stress Relief",
+            "excerpt": "Discover the best essential oils to help you relax and reduce stress.",
+            "category": "Wellness",
+            "date": "May 10, 2023",
+            "image": "https://picsum.photos/800/500?random=2",
+            "alt": "Essential oil bottles with diffuser",
+            "linkPath": "/articles/2"
+          },
+          {
+            "id": 3,
+            "title": "Meditation Techniques for Better Sleep",
+            "excerpt": "Learn simple meditation practices to improve your sleep quality.",
+            "category": "Meditation",
+            "date": "May 5, 2023",
+            "image": "https://picsum.photos/800/500?random=3",
+            "alt": "Person meditating in peaceful setting",
+            "linkPath": "/articles/3"
+          }
+        ]
+      }
+    }
   }
 }
