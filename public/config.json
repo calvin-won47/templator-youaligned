@@ -1,0 +1,19 @@
+{
+  "siteIdentity": {
+    "name": "默认站点名称",
+    "logoUrl": "/default-logo.png"
+  },
+  "slogan": "默认标语",
+  "description": "默认描述（用于 Hero 文案）",
+  "seo": {
+    "title": "默认站点名称",
+    "description": "这是默认的 SEO 描述，部署时会被覆盖",
+    "keywords": ["yoga", "wellness", "conscious living"]
+  },
+  "seo_keyword": "yoga, wellness, conscious living",
+  "gtm_id": "GTM-58TDPTJ3",
+  "apiEndpoints": {
+    "strapi_url": "https://2amcreations.com",
+    "strapi_site_slug": "xmyxyswkj"
+  }
+}

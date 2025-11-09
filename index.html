@@ -4,8 +4,31 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>YouAligned - Yoga, Wellness & Conscious Living</title>
-    <meta name="description" content="Yoga, wellness and conscious living inspiration, tutorials and resources" />
+    <title>正在加载...</title>
+    <meta name="description" content="正在加载站点配置..." />
+    <script>
+      // 1) 设置一个全局默认值，以防请求失败
+      window.APP_CONFIG = {
+        siteIdentity: { name: '加载失败' },
+        apiEndpoints: { strapi_url: '', strapi_site_slug: 'error' },
+      };
+
+      try {
+        // 2) 使用同步 XMLHttpRequest 来阻塞后续脚本执行
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/config.json', false); // 'false' 表示同步
+        xhr.send(null);
+
+        if (xhr.status === 200) {
+          // 3) 解析 JSON 并将其存储在全局 window 对象上
+          window.APP_CONFIG = JSON.parse(xhr.responseText);
+        } else {
+          console.warn('无法加载外部 config.json，将使用默认配置。');
+        }
+      } catch (error) {
+        console.error('加载 config.json 时出错:', error);
+      }
+    </script>
     <!-- Google Tag Manager -->
     <script>
       (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':

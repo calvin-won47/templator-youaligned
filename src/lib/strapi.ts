@@ -1,8 +1,20 @@
-export const API_URL = 'https://2amcreations.com'
-export const SITE_SLUG = 'xmyxyswkj'
+const FALLBACK_API_URL = 'https://2amcreations.com'
+const FALLBACK_SITE_SLUG = 'xmyxyswkj'
+
+function getApiUrl(): string {
+  const cfg = (window as any).APP_CONFIG
+  const url = cfg?.apiEndpoints?.strapi_url ?? cfg?.strapi_url
+  return typeof url === 'string' && url ? url : FALLBACK_API_URL
+}
+
+function getSiteSlug(): string {
+  const cfg = (window as any).APP_CONFIG
+  const slug = cfg?.apiEndpoints?.strapi_site_slug ?? cfg?.strapi_site_slug
+  return typeof slug === 'string' && slug ? slug : FALLBACK_SITE_SLUG
+}
 
 export function buildUrl(path: string): string {
-  return `${API_URL}${path}`
+  return `${getApiUrl()}${path}`
 }
 
 function normalizeImage(media: any): string | null {
@@ -35,7 +47,7 @@ export type BlogDetailItem = {
 }
 
 export async function fetchBlogPosts(): Promise<BlogListItem[]> {
-  const query = `/api/blog-posts?populate=coverImage&filters[site][slug][$eq]=${SITE_SLUG}&sort=createdAt:desc`
+  const query = `/api/blog-posts?populate=coverImage&filters[site][slug][$eq]=${getSiteSlug()}&sort=createdAt:desc`
   const res = await fetch(buildUrl(query))
   if (!res.ok) throw new Error('Failed to fetch blog posts')
   const json = await res.json()
@@ -51,7 +63,7 @@ export async function fetchBlogPosts(): Promise<BlogListItem[]> {
 }
 
 export async function fetchBlogBySlug(slug: string): Promise<BlogDetailItem | null> {
-  const query = `/api/blog-posts?populate=*&filters[slug][$eq]=${slug}&filters[site][slug][$eq]=${SITE_SLUG}`
+  const query = `/api/blog-posts?populate=*&filters[slug][$eq]=${slug}&filters[site][slug][$eq]=${getSiteSlug()}`
   const res = await fetch(buildUrl(query))
   if (!res.ok) throw new Error('Failed to fetch blog detail')
   const json = await res.json()
