@@ -11,7 +11,7 @@
     "keywords": ["yoga", "wellness", "conscious living"]
   },
   "seo_keyword": "yoga, wellness, conscious living",
-  "gtm_id": "GTM-58TDPTJ3",
+  "gtm_id": "GTM-PT8K7DHH",
   "apiEndpoints": {
     "strapi_url": "https://2amcreations.com",
     "strapi_site_slug": "xmyxyswkj"
@@ -25,7 +25,20 @@
   "footer": {
     "description": "Yoga, wellness and conscious living inspiration.",
     "subscribeText": "Get the latest updates and inspiration.",
-    "subscribeButton": "Join"
+    "subscribeButton": "Join",
+    "exploreLinks": [
+      { "label": "Home", "href": "/" },
+      { "label": "Articles", "href": "/articles" },
+      { "label": "Videos", "href": "/videos" },
+      { "label": "About", "href": "/about" },
+      { "label": "Blog", "href": "/blog" }
+    ],
+    "connectLinks": [
+      { "label": "Instagram", "href": "#" },
+      { "label": "Facebook", "href": "#" },
+      { "label": "Pinterest", "href": "#" },
+      { "label": "YouTube", "href": "#" }
+    ]
   },
   "homepage": {
     "sections": {
@@ -36,7 +49,7 @@
           { "name": "Meditation", "slug": "meditation", "count": 28, "image": "https://picsum.photos/400/300?random=5" },
           { "name": "Wellness", "slug": "wellness", "count": 35, "image": "https://picsum.photos/400/300?random=6" },
           { "name": "Nutrition", "slug": "nutrition", "count": 19, "image": "https://picsum.photos/400/300?random=7" },
-          { "name": "Mindfulness", "slug": "mindfulness", "count": 23, "image": "httpsum.photos/400/300?random=8" },
+          { "name": "Mindfulness", "slug": "mindfulness", "count": 23, "image": "https://picsum.photos/400/300?random=8" },
           { "name": "Lifestyle", "slug": "lifestyle", "count": 31, "image": "https://picsum.photos/400/300?random=9" }
         ]
       },
@@ -73,6 +86,39 @@
             "alt": "Person meditating in peaceful setting",
             "linkPath": "/articles/3"
           }
+        ]
+      },
+      "popularVideos": {
+        "title": "Popular Videos",
+        "ctaLabel": "View All Videos",
+        "items": [
+          { "id": 1, "title": "30-Minute Vinyasa Flow", "views": "125K", "duration": "30:15", "thumbnail": "https://picsum.photos/400/225?random=10", "alt": "Yoga instructor demonstrating vinyasa flow" },
+          { "id": 2, "title": "Morning Meditation for Clarity", "views": "89K", "duration": "15:42", "thumbnail": "https://picsum.photos/400/225?random=11", "alt": "Peaceful meditation scene" },
+          { "id": 3, "title": "Yoga for Back Pain Relief", "views": "210K", "duration": "25:30", "thumbnail": "https://picsum.photos/400/225?random=12", "alt": "Yoga poses for back pain" },
+          { "id": 4, "title": "Breathwork for Anxiety", "views": "76K", "duration": "18:20", "thumbnail": "https://picsum.photos/400/225?random=13", "alt": "Person practicing breathing exercises" }
+        ]
+      },
+      "videoList": {
+        "items": [
+          { "id": 1, "title": "30-Minute Vinyasa Flow", "views": "125K", "duration": "30:15", "thumbnail": "https://picsum.photos/400/225?random=20", "alt": "Yoga instructor demonstrating vinyasa flow" },
+          { "id": 2, "title": "Morning Meditation for Clarity", "views": "89K", "duration": "15:42", "thumbnail": "https://picsum.photos/400/225?random=21", "alt": "Peaceful meditation scene" },
+          { "id": 3, "title": "Yoga for Back Pain Relief", "views": "210K", "duration": "25:30", "thumbnail": "https://picsum.photos/400/225?random=22", "alt": "Yoga poses for back pain" },
+          { "id": 4, "title": "Breathwork for Anxiety", "views": "76K", "duration": "18:20", "thumbnail": "https://picsum.photos/400/225?random=23", "alt": "Person practicing breathing exercises" },
+          { "id": 5, "title": "Sun Salutation Tutorial", "views": "142K", "duration": "22:10", "thumbnail": "https://picsum.photos/400/225?random=24", "alt": "Demonstration of sun salutation sequence" },
+          { "id": 6, "title": "Evening Yoga for Better Sleep", "views": "98K", "duration": "28:45", "thumbnail": "https://picsum.photos/400/225?random=25", "alt": "Gentle evening yoga routine" },
+          { "id": 7, "title": "Prenatal Yoga First Trimester", "views": "67K", "duration": "35:20", "thumbnail": "https://picsum.photos/400/225?random=26", "alt": "Pregnant woman doing yoga" },
+          { "id": 8, "title": "Chair Yoga for Seniors", "views": "54K", "duration": "20:15", "thumbnail": "https://picsum.photos/400/225?random=27", "alt": "Older adults doing chair yoga" }
+        ]
+      },
+      "articleList": {
+        "title": "Latest Articles",
+        "items": [
+          { "id": 1, "title": "Morning Yoga Routine for Beginners", "excerpt": "Start your day with this gentle 20-minute yoga sequence perfect for beginners.", "category": "Yoga", "date": "May 15, 2023", "image": "https://picsum.photos/800/500?random=14", "alt": "Woman doing yoga on the beach at sunrise", "linkPath": "/articles/1" },
+          { "id": 2, "title": "5 Essential Oils for Stress Relief", "excerpt": "Discover the best essential oils to help you relax and reduce stress.", "category": "Wellness", "date": "May 10, 2023", "image": "https://picsum.photos/800/500?random=15", "alt": "Essential oil bottles with diffuser", "linkPath": "/articles/2" },
+          { "id": 3, "title": "Meditation Techniques for Better Sleep", "excerpt": "Learn simple meditation practices to improve your sleep quality.", "category": "Meditation", "date": "May 5, 2023", "image": "https://picsum.photos/800/500?random=16", "alt": "Person meditating in peaceful setting", "linkPath": "/articles/3" },
+          { "id": 4, "title": "The Benefits of Yin Yoga", "excerpt": "Explore how yin yoga can improve flexibility and reduce stress.", "category": "Yoga", "date": "April 28, 2023", "image": "https://picsum.photos/800/500?random=17", "alt": "Person in yin yoga pose", "linkPath": "/articles/4" },
+          { "id": 5, "title": "Healthy Smoothie Recipes for Energy", "excerpt": "Try these delicious smoothie recipes to boost your energy naturally.", "category": "Nutrition", "date": "April 22, 2023", "image": "https://picsum.photos/800/500?random=18", "alt": "Colorful smoothie in glass", "linkPath": "/articles/5" },
+          { "id": 6, "title": "Mindful Walking in Nature", "excerpt": "How to practice mindfulness while walking outdoors.", "category": "Mindfulness", "date": "April 15, 2023", "image": "https://picsum.photos/800/500?random=19", "alt": "Person walking on forest path", "linkPath": "/articles/6" }
         ]
       }
     }

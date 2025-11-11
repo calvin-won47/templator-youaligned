@@ -22,6 +22,16 @@ function App() {
     if (meta) {
       meta.content = description
     }
+    const keywords = Array.isArray(config?.seo?.keywords)
+      ? config!.seo!.keywords.join(', ')
+      : (config?.seo_keyword || '')
+    let metaKeywords = document.querySelector('meta[name="keywords"]') as HTMLMetaElement | null
+    if (!metaKeywords) {
+      metaKeywords = document.createElement('meta')
+      metaKeywords.name = 'keywords'
+      document.head.appendChild(metaKeywords)
+    }
+    metaKeywords.content = keywords
   }, [config])
   return (
     <div className="min-h-screen flex flex-col">
