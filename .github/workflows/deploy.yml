@@ -110,8 +110,9 @@ jobs:
             echo "远程 config.json 不存在，回退到仓库 public/config.json"
             cp public/config.json tmp/config.json
           fi
-          node -e "const fs=require('fs');const cfg=JSON.parse(fs.readFileSync('tmp/config.json','utf8'));const u=cfg?.apiEndpoints?.strapi_url||cfg?.strapi_url||'';const s=cfg?.apiEndpoints?.strapi_site_slug||cfg?.strapi_site_slug||'';fs.writeFileSync('tmp/env.txt',`strapi_url=${u}\nstrapi_site_slug=${s}\n`)"
-          cat tmp/env.txt >> $GITHUB_ENV
+          # 通过 jq 解析 JSON 并写入环境变量（避免反引号引发的 shell 替换问题）
+          echo "strapi_url=$(jq -r '.apiEndpoints.strapi_url // .strapi_url // ""' tmp/config.json)" >> $GITHUB_ENV
+          echo "strapi_site_slug=$(jq -r '.apiEndpoints.strapi_site_slug // .strapi_site_slug // ""' tmp/config.json)" >> $GITHUB_ENV
 
       - name: Generate sitemap.xml and robots.txt for ${{ matrix.site.url }}
         env:
@@ -189,8 +190,9 @@ jobs:
             echo "远程 config.json 不存在，回退到仓库 public/config.json"
             cp public/config.json tmp/config.json
           fi
-          node -e "const fs=require('fs');const cfg=JSON.parse(fs.readFileSync('tmp/config.json','utf8'));const u=cfg?.apiEndpoints?.strapi_url||cfg?.strapi_url||'';const s=cfg?.apiEndpoints?.strapi_site_slug||cfg?.strapi_site_slug||'';fs.writeFileSync('tmp/env.txt',`strapi_url=${u}\nstrapi_site_slug=${s}\n`)"
-          cat tmp/env.txt >> $GITHUB_ENV
+          # 通过 jq 解析 JSON 并写入环境变量（避免反引号引发的 shell 替换问题）
+          echo "strapi_url=$(jq -r '.apiEndpoints.strapi_url // .strapi_url // ""' tmp/config.json)" >> $GITHUB_ENV
+          echo "strapi_site_slug=$(jq -r '.apiEndpoints.strapi_site_slug // .strapi_site_slug // ""' tmp/config.json)" >> $GITHUB_ENV
 
       - name: Generate sitemap.xml and robots.txt for single site
         env:
