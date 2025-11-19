@@ -144,7 +144,15 @@ async function main() {
   const token = process.env.STRAPI_API_TOKEN || ''
 
   const staticPaths = ['/', '/articles', '/videos', '/about', '/blog']
-  const posts = await fetchAllBlogPosts(strapiUrl, siteSlug, token)
+  console.log(`[sitemap] SITE_URL: ${siteUrl}`)
+  console.log(`[sitemap] Resolved Strapi: url=${strapiUrl} slug=${siteSlug}`)
+  let posts = []
+  try {
+    posts = await fetchAllBlogPosts(strapiUrl, siteSlug, token)
+    console.log(`[sitemap] Fetched ${posts.length} blog posts from Strapi`)
+  } catch (err) {
+    console.warn(`[sitemap] 拉取 Strapi 内容失败，使用仅静态页面的站点地图。原因: ${err?.message || err}`)
+  }
 
   const sitemapXml = buildSitemapXml(siteUrl, staticPaths, posts)
   const robotsTxt = buildRobotsTxt(siteUrl)
