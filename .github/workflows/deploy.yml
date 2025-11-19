@@ -7,10 +7,17 @@ on:
   push:
     branches:
       - main
+  schedule:
+    # 每日 02:00 UTC 自动刷新站点地图并部署
+    - cron: '0 2 * * *'
   workflow_dispatch:
     inputs:
       target_site_path:
         description: "可选：只部署到某一个站点的绝对路径 (例如 /www/wwwroot/example.com)"
+        required: false
+        type: string
+      target_site_url:
+        description: "可选：该站点的完整域名(例如 https://example.com)，用于生成 sitemap"
         required: false
         type: string
 
@@ -50,18 +57,21 @@ jobs:
     name: 2. Deploy to Baota Server
     needs: build # 确保此作业在 'build' 作业成功后才运行
     runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-deploy-${{ matrix.site.url }}
+      cancel-in-progress: true
 
     # --- 关键：使用 Matrix 策略批量部署 ---
     # 在这里手动维护您所有站点的“服务器绝对路径”
     strategy:
       matrix:
-        site_path:
-          # 运行 'create_site.py' 后，您需要来这里添加新站点的路径
-          - /www/wwwroot/tevixa.com
-          - /www/wwwroot/yuvixa.com
-          - /www/wwwroot/novuki.com
-          - /www/wwwroot/duvixo.com
-          - /www/wwwroot/rivuxa.com
+        site:
+          # 运行 'create_site.py' 后，您需要来这里添加新站点的 {path, url}
+          - { path: /www/wwwroot/tevixa.com, url: https://tevixa.com }
+          - { path: /www/wwwroot/yuvixa.com, url: https://yuvixa.com }
+          - { path: /www/wwwroot/novuki.com, url: https://novuki.com }
+          - { path: /www/wwwroot/duvixo.com, url: https://duvixo.com }
+          - { path: /www/wwwroot/rivuxa.com, url: https://rivuxa.com }
           # - /www/wwwroot/client-c.com
           #... 您可以在这里列出100个
 
@@ -76,6 +86,36 @@ jobs:
           name: vite-build-dist
           path: ./dist
 
+      - name: Setup Node.js 18 (for sitemap generation)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Resolve Strapi config (remote/local) and export env
+        env:
+          SITE_URL: ${{ matrix.site.url }}
+        run: |
+          set -e
+          mkdir -p tmp
+          SITE_URL_TRIM=${SITE_URL%/}
+          if curl -fsSL "$SITE_URL_TRIM/config.json" -o tmp/config.json; then
+            echo "使用远程 config.json"
+          else
+            echo "远程 config.json 不存在，回退到仓库 public/config.json"
+            cp public/config.json tmp/config.json
+          fi
+          node -e "const fs=require('fs');const cfg=JSON.parse(fs.readFileSync('tmp/config.json','utf8'));const u=cfg?.apiEndpoints?.strapi_url||cfg?.strapi_url||'';const s=cfg?.apiEndpoints?.strapi_site_slug||cfg?.strapi_site_slug||'';fs.writeFileSync('tmp/env.txt',`strapi_url=${u}\nstrapi_site_slug=${s}\n`)"
+          cat tmp/env.txt >> $GITHUB_ENV
+
+      - name: Generate sitemap.xml and robots.txt for ${{ matrix.site.url }}
+        env:
+          SITE_URL: ${{ matrix.site.url }}
+          STRAPI_API_TOKEN: ${{ secrets.STRAPI_API_TOKEN }}
+        run: |
+          set -e
+          node scripts/generate-sitemap.mjs
+
       - name: Setup SSH agent
         uses: webfactory/ssh-agent@v0.9.0
         with:
@@ -86,7 +126,7 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan -H ${{ secrets.BAOTA_SERVER_IP }} >> ~/.ssh/known_hosts
 
-      - name: Deploy to ${{ matrix.site_path }} via rsync
+      - name: Deploy to ${{ matrix.site.path }} via rsync
         run: |
           rsync -rlDz \
             --delete \
@@ -96,11 +136,11 @@ jobs:
             --exclude='.well-known/' \
             --exclude='logs/' \
             --exclude='ssl/' \
-            ./dist/ ${{ secrets.BAOTA_SSH_USER }}@${{ secrets.BAOTA_SERVER_IP }}:${{ matrix.site_path }}
+            ./dist/ ${{ secrets.BAOTA_SSH_USER }}@${{ secrets.BAOTA_SERVER_IP }}:${{ matrix.site.path }}
 
       - name: Seed config.json if missing (first-time only)
         run: |
-          rsync -avzr --ignore-existing ./public/config.json ${{ secrets.BAOTA_SSH_USER }}@${{ secrets.BAOTA_SERVER_IP }}:${{ matrix.site_path }}/
+          rsync -avzr --ignore-existing ./public/config.json ${{ secrets.BAOTA_SSH_USER }}@${{ secrets.BAOTA_SERVER_IP }}:${{ matrix.site.path }}/
 
   # --- 作业 3: 仅部署到一个指定站点（手动触发用） ---
   deploy_single:
@@ -108,6 +148,9 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' && inputs.target_site_path != '' }}
     needs: build
     runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-deploy-single-${{ inputs.target_site_url || inputs.target_site_path }}
+      cancel-in-progress: true
     steps:
       - name: Checkout Code (for seeding config.json)
         uses: actions/checkout@v5
@@ -117,6 +160,46 @@ jobs:
         with:
           name: vite-build-dist
           path: ./dist
+
+      - name: Setup Node.js 18 (for sitemap generation)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Resolve Strapi config (remote/local) and export env
+        env:
+          SITE_URL: ${{ inputs.target_site_url }}
+        run: |
+          set -e
+          mkdir -p tmp
+          if [ -z "$SITE_URL" ]; then
+            base=$(basename "${{ inputs.target_site_path }}")
+            SITE_URL="https://$base"
+          fi
+          SITE_URL_TRIM=${SITE_URL%/}
+          if curl -fsSL "$SITE_URL_TRIM/config.json" -o tmp/config.json; then
+            echo "使用远程 config.json"
+          else
+            echo "远程 config.json 不存在，回退到仓库 public/config.json"
+            cp public/config.json tmp/config.json
+          fi
+          node -e "const fs=require('fs');const cfg=JSON.parse(fs.readFileSync('tmp/config.json','utf8'));const u=cfg?.apiEndpoints?.strapi_url||cfg?.strapi_url||'';const s=cfg?.apiEndpoints?.strapi_site_slug||cfg?.strapi_site_slug||'';fs.writeFileSync('tmp/env.txt',`strapi_url=${u}\nstrapi_site_slug=${s}\n`)"
+          cat tmp/env.txt >> $GITHUB_ENV
+
+      - name: Generate sitemap.xml and robots.txt for single site
+        env:
+          SITE_URL: ${{ inputs.target_site_url }}
+          STRAPI_API_TOKEN: ${{ secrets.STRAPI_API_TOKEN }}
+        run: |
+          set -e
+          if [ -z "$SITE_URL" ]; then
+            # 从路径推断域名 (最后一级目录)，默认使用 https
+            base=$(basename "${{ inputs.target_site_path }}")
+            SITE_URL="https://$base"
+            echo "推断站点 URL: $SITE_URL"
+          fi
+          node scripts/generate-sitemap.mjs
 
       - name: Setup SSH agent
         uses: webfactory/ssh-agent@v0.9.0
